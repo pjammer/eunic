@@ -2,8 +2,11 @@ Eunic - A Bash script to Manage Unicorn
 
 Install:
 =======
+You git cloned it, right? Do it now.
 
-In the source directory where you downloaded this repo:
+1. Change the APP_PATH in the script
+
+2. In the source directory where you downloaded this repo:
 cp eunic /usr/local/bin
 chmod +x /usr/local/bin/eunic
 
