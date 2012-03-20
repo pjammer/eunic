@@ -1,0 +1,28 @@
+Eunic - A Bash script to Manage Unicorn
+
+Install:
+=======
+
+In the source directory where you downloaded this repo:
+cp eunic /usr/local/bin
+chmod +x /usr/local/bin/eunic
+
+Command Usage:
+==============
+
+Restart:
+    eunic -R production
+
+Start:
+    eunic -S production
+
+Stop:
+    eunic -s production
+
+There is the USR reload thing in here but f'd if I can get USR to work. I should try again.
+
+TODO:
+=====
+Install script
+Default production
+Install script to take 2 args, path and default env

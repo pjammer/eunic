@@ -1,0 +1,49 @@
+#!/bin/bash
+set -u
+set -e
+#--------- Change this to your Path --------
+APP_PATH=/path/to/app
+#-------------------------------------------
+PID=$APP_PATH/tmp/pids/unicorn.pid
+OLD_PID=$APP_PATH/tmp/pids/unicorn.pid.oldbin
+
+# -------- Functions --------------
+stop() {
+  kill -15 `cat $PID`
+}
+start() {
+  unicorn_rails -E $1 -c $APP_PATH/config/unicorn.rb -D
+}
+
+#--------- Options -------------
+while getopts ":S:s:R:r:" opt; do
+case $opt in
+
+    S)
+            echo "Starting Unicorn"
+            start "$OPTARG"
+            ;;
+    s)
+            echo "Stopping Unicorn"
+            stop  "$OPTARG"
+            ;;
+    R)
+            echo "Restarting Unicorn"
+            stop  "$OPTARG"
+            sleep 1 
+            start  "$OPTARG"
+            ;;
+    r)
+            echo "Reloading Unicorn if USR2 is enabled"
+            kill -USR2 `cat $PID`
+            if [ -s $OLD_PID ]
+            then 
+                kill -WINCH `cat $OLD_PID` && kill -QUIT `cat $OLD_PID`
+            fi
+            ;;
+    ?)
+            echo "Usage: -S [start] | -R [restart] | -r [reload] | -s [stop unicorn] [production|development|staging|weirdo_environment_you_made_up]"
+            exit 1
+            ;;
+esac
+done
