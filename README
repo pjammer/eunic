@@ -26,3 +26,7 @@ TODO:
 Install script
 Default production
 Install script to take 2 args, path and default env
+
+Acknowledgements:
+=================
+http://blog.kiskolabs.com/post/722322392/unicorn-init-scripts was the first iteration of this script. I started this way, moved to functions later in the first commit.
