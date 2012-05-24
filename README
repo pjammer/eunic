@@ -4,7 +4,9 @@ Install:
 =======
 You git cloned it, right? Do it now.
 
-1. Change the APP_PATH in the script
+1. To install on your system run:
+
+   eunic -i /path/to/your/app
 
 2. In the source directory where you downloaded this repo:
 cp eunic /usr/local/bin
@@ -26,9 +28,8 @@ There is the USR reload thing in here but f'd if I can get USR to work. I should
 
 TODO:
 =====
-Install script
 Default production
-Install script to take 2 args, path and default env
+Install script to take default env
 
 Acknowledgements:
 =================

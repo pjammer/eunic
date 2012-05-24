@@ -2,7 +2,7 @@
 set -u
 set -e
 #--------- Change this to your Path --------
-APP_PATH=/path/to/app
+APP_PATH=XXX
 #-------------------------------------------
 PID=$APP_PATH/tmp/pids/unicorn.pid
 OLD_PID=$APP_PATH/tmp/pids/unicorn.pid.oldbin
@@ -16,7 +16,7 @@ start() {
 }
 
 #--------- Options -------------
-while getopts ":S:s:R:r:" opt; do
+while getopts ":S:s:R:r:i:" opt; do
 case $opt in
 
     S)
@@ -30,19 +30,24 @@ case $opt in
     R)
             echo "Restarting Unicorn"
             stop  "$OPTARG"
-            sleep 1 
+            sleep 1
             start  "$OPTARG"
             ;;
     r)
             echo "Reloading Unicorn if USR2 is enabled"
             kill -USR2 `cat $PID`
             if [ -s $OLD_PID ]
-            then 
+            then
                 kill -WINCH `cat $OLD_PID` && kill -QUIT `cat $OLD_PID`
             fi
             ;;
+    i)
+	    echo "Where is your Rails App? Type the full path: e.g., /home/deployer/app_name"
+	    read path
+	    sed -i '' "s:XXX:$path:" eunic
+	    ;;
     ?)
-            echo "Usage: -S [start] | -R [restart] | -r [reload] | -s [stop unicorn] [production|development|staging|weirdo_environment_you_made_up]"
+            echo "Usage: -S [start] | -R [restart] | -r [reload] | -s [stop unicorn] | -i [install] [production|development|staging|weirdo_environment_you_made_up]"
             exit 1
             ;;
 esac
