@@ -4,13 +4,14 @@ Install:
 =======
 You git cloned it, right? Do it now.
 
-1. To install on your system run:
+1. In the source directory where you downloaded this repo:
+
+    cp eunic /usr/local/bin
+    chmod +x /usr/local/bin/eunicTo install on your system run:
+
+2. To install eunic
 
    eunic -i /path/to/your/app
-
-2. In the source directory where you downloaded this repo:
-cp eunic /usr/local/bin
-chmod +x /usr/local/bin/eunic
 
 Command Usage:
 ==============
