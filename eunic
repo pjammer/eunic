@@ -1,13 +1,18 @@
 #!/bin/bash
 set -u
 set -e
-#--------- Change this to your Path --------
-APP_PATH=/home/user/path
+#--------- Change this to your Path using the arg -i /your/path --------
+DEFAULT_ENV=production
+APP_PATH=/home/something/here
 #-------------------------------------------
 PID=$APP_PATH/tmp/pids/unicorn.pid
 OLD_PID=$APP_PATH/tmp/pids/unicorn.pid.oldbin
 
 # -------- Functions --------------
+find_environment() {
+    THE_ENV=$1
+    : $THE_ENV:="$DEFAULT_ENV"}
+}
 stop() {
   kill -15 `cat $PID`
 }
@@ -16,36 +21,68 @@ start() {
 }
 
 #--------- Options -------------
-while getopts ":S:s:R:ri:" opt; do
+while getopts ":srxbS:R:I:D:" opt; do
 case $opt in
 
-    S)
-            echo "Starting Unicorn"
-            start "$OPTARG"
-            ;;
+
     s)
-            echo "Stopping Unicorn"
-            stop  "$OPTARG"
+	    echo "Starting Unicorn in $DEFAULT_ENV"
+            start "$DEFAULT_ENV"
             ;;
-    R)
-            echo "Restarting Unicorn"
-            stop  "$OPTARG"
-            sleep 1
-            start  "$OPTARG"
+    x)
+	    echo "Stopping Unicorn in $DEFAULT_ENV"
+            stop  "$DEFAULT_ENV"
             ;;
     r)
-            echo "Reloading Unicorn if USR2 is enabled"
+            echo "Restarting Unicorn in $DEFAULT_ENV"
+            stop  "$DEFAULT_ENV"
+            sleep 1
+            start  "$DEFAULT_ENV"
+            ;;
+    S)
+            find_environment "$OPTARG"
+	    echo "Starting Unicorn in $THE_ENV"
+            start "$THE_ENV"
+            ;;
+    R)
+	    find_environment "$OPTARG"
+            echo "Restarting Unicorn in $THE_ENV"
+            stop  "$THE_ENV"
+            sleep 1
+            start  "$THE_ENV"
+            ;;
+    b)
+            echo "Reloading $THE_ENV Unicorn if USR2 is enabled"
             kill -USR2 `cat $PID`
             if [ -s $OLD_PID ]
             then
                 kill -WINCH `cat $OLD_PID` && kill -QUIT `cat $OLD_PID`
             fi
             ;;
-    i)
-	    sed -i '' "s:/home/user/path:$OPTARG:" eunic
+    I)
+	    sed -i -e "s:/home/something/here:$OPTARG:" eunic
+	    ;;
+    D)
+	    sed -ie "s/^DEFAULT_ENV=.*/DEFAULT_ENV=$OPTARG/" eunic
 	    ;;
     ?)
-            echo "Usage: -S [start] | -R [restart] | -r [reload] | -s [stop unicorn] [production|development|staging|weirdo_environment_you_made_up]. You'll run install once using  -i /path/to/your/app"
+
+	    echo ""
+	    echo "----Current Settings (Change with -I [path/to/app] and/or -D [environment]-----------"
+	    echo "Default Environment: $DEFAULT_ENV "
+	    echo "Rails Root path is: $APP_PATH"
+	    echo ""
+	    echo "------------USAGE--------------"
+	    echo ""
+            echo "Starts in $DEFAULT_ENV by default: -s [start] | -r [restart] | -x [stop unicorn] | -b [USR2 reload]"
+
+	    echo ""
+	    echo "ADD Environment ARGs: -S [start] | -R [restart] [production|development|staging|weirdo_environment_you_made_up] "
+	    echo ""
+	    echo "------ INSTALL (Complete on initial setup of eunic) ---------"
+	    echo "You'll run install once using  -I /path/to/your/app"
+	    echo "Combine with setting the default environment using -D production"
+
             exit 1
             ;;
 esac

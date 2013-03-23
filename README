@@ -11,26 +11,43 @@ You git cloned it, right? Do it now.
 
 2. To install eunic:
 
-   eunic -i /path/to/your/app
+   eunic -I /path/to/your/app
 
-Command Usage:
+3. OPTIONAL: Change Default Environment. Set to `production` right now.
+   eunic -D development
+
+Command Usage (with Default Environment, production to start):
 ==============
 
 Restart:
-    eunic -R production
+    eunic -r
 
 Start:
-    eunic -S production
+    eunic -s
 
 Stop:
-    eunic -s production
+    eunic -x
 
-There is the USR reload thing in here but f'd if I can get USR to work. I should try again.
+Command Usage (with another Environment):
+==============
+
+Restart:
+    eunic -R development
+
+Start:
+    eunic -S development
+
+USR Usage (add Environment):
+==============
+
+Reload:
+    eunic -b production
+
+-b is really untested in this script. There is the USR reload thing in here but f'd if I can get USR to work consitently. I should try again.
 
 TODO:
 =====
-Default production
-Install script to take default env
+Figure out USR.  Dig up the blog post on how to use that.
 
 Acknowledgements:
 =================
